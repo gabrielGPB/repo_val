@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalScience</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cadastro-login.css">
+</head>
+<body>
+    <!-- <div class="header">
+        <div class="container">
+        <div class="logo_header">
+            <img src="../imagens/icone2.png" alt="">
+            <h1>Digital<br>Science</h1>
+        </div>
+        <ul>
+            <li><a href="SITE.html">Home</a></li>
+            <li><a href="Sobre_nós.html">Sobre nós</a></li>
+          
+            <li><a class="agora">Cadastro</a></li>
+           
+            <li><a href="login.html">Login</a></li>
+        </ul>
+        </div>
+    </div> -->
+
+    <!-- <div class="banner2">
+        <div class="container">
+           <div class="card">
+               <h1>Cadastro</h1>
+                <h4>Nome:</h4>
+            <input id="ipt_nome" type="text" placeholder="Insira um nome">
+                <h4>Sobrenome:</h4>
+            <input id="ipt_sobrenome" type="text" placeholder="Insira seu sobrenome">
+                <h4>CPF</h4>
+            <input id="ipt_cpf" type="text" placeholder="Insira seu CPF">
+                <h4>Email:</h4>
+            <input id="ipt_email" type="text" placeholder="Insira um email">
+                <h4>Senha:</h4>
+            <input id="ipt_senha" type="password" placeholder="Insira sua senha">
+            <button onclick="validacaao()" class="btn"><a href="login.html">Entrar</a></button>
+           </div>
+        </div>
+    </div> -->
+
+    <div class="card-laranja2">
+        <div class="card-txt-cad">
+            <h1>Seja Bem-Vindo :D</h1>
+            <span>Cadastre-se para ficar atento a todas <br> as novidades que temos a oferecer!</span>
+            <a href="login.html"><input class="btn-login" type="button" value="Logar" id="cadastro"></a>
+            <a href="index.html"><input class="btn-login" type="button" value="Voltar" id="cadastro"></a>
+        </div>
+    </div>
+    
+    <div class="fundo">
+        <div class="card-black2">
+            <div class="cadastro">
+            </div>
+            
+                <div class="banner2">
+                    <div class="container2">
+
+                        <div class="card_erro" id="cardErro">
+                            <span id="mensagem_erro"></span>
+                        </div>
+
+                       <div class="card2">
+                           <h1>Cadastro</h1>
+                            <h4>Nome:</h4>
+                        <input class="ipt" id="nome_input" type="text" placeholder="Insira um nome">
+                            <h4>Sobrenome:</h4>
+                        <input class="ipt" id="sobrenome_input" type="text" placeholder="Insira seu sobrenome">
+                            <h4>CPF</h4>
+                        <input class="ipt" id="cpf_input" type="text" placeholder="Insira seu CPF">
+                            <h4>Email:</h4>
+                        <input class="ipt" id="email_input" type="text" placeholder="Insira um email">
+                            <h4>Senha:</h4>
+                        <input class="ipt" id="senha_input" type="password" placeholder="Insira sua senha">
+                        <button onclick="cadastrar()" class="btn-login" id="login">Cadastrar</button>
+
+                        <div id="div_aguardar" class="loading-div">
+                            <img src="./assets/circle-loading.gif" id="loading-gif">
+                        </div>
+        
+                        <div id="div_erros_login">
+        
+                        </div>
+                       </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+    </div>  
+</body>
+</html>
+<script>
+    function cadastrar() {
+
+        //Recupere o valor da nova input pelo nome do id
+        // Agora vá para o método fetch logo abaixo
+        var nomeVar = nome_input.value;
+        var sobrenomeVar = sobrenome_input.value;
+        var cpfVar = cpf_input.value;
+        var emailVar = email_input.value;
+        var senhaVar = senha_input.value;
+
+        if (nomeVar == "" || sobrenomeVar == "" || cpfVar == "" || emailVar == "" || senhaVar == "") {
+            cardErro.style.display = "block"
+            mensagem_erro.innerHTML = "(Mensagem de erro para todos os campos em branco)";
+
+            finalizarAguardar();
+            return false;
+        }
+        else {
+            setInterval(sumirMensagem, 5000)
+        }
+
+        // Enviando o valor da nova input
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                // crie um atributo que recebe o valor recuperado aqui
+                // Agora vá para o arquivo routes/usuario.js
+                nomeServer: nomeVar,
+                sobrenomeServer: sobrenomeVar,
+                cpfServer: cpfVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar
+            })
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+                cardErro.style.display = "block";
+
+                mensagem_erro.innerHTML = "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+
+                setTimeout(() => {
+                    window.location = "login.html";
+                }, "2000")
+                
+                limparFormulario();
+                
+            } else {
+                throw ("Houve um erro ao tentar realizar o cadastro!");
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+            
+        });
+
+        return false;
+    }
+
+    function sumirMensagem() {
+        cardErro.style.display = "none"
+    }
+</script>
+
